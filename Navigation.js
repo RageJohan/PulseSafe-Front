@@ -5,6 +5,7 @@ import WelcomeScreen from './screens/WelcomeScreenView';
 import LoginScreen from './screens/LoginScreenView';
 import RegisterScreen from './screens/RegisterScreenView';
 import PolicyScreenView from './screens/PolicyScreenView';
+import MainScreenView from './screens/MainScreenView';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ export default function Navigation() {
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Policy" component={PolicyScreenView} options={{ headerShown: false }} />
+                <Stack.Screen name="Main" component={MainScreenView} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

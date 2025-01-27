@@ -1,13 +1,14 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
-import { Ionicons } from "@expo/vector-icons"
+// screens/LoginScreenView.js
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginScreen() {
-  const navigation = useNavigation()
-  const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const navigation = useNavigation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View style={styles.container}>
@@ -59,7 +60,11 @@ export default function LoginScreen() {
           <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.loginButton}>
+        {/* Botón de Iniciar Sesión */}
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => navigation.navigate("Main")} // Navega a MainScreenView
+        >
           <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
 
@@ -71,7 +76,7 @@ export default function LoginScreen() {
         </View>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -169,5 +174,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-})
-
+});
