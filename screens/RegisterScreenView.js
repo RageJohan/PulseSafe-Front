@@ -77,8 +77,14 @@ export default function RegisterScreen() {
 
         <View style={styles.termsContainer}>
           <Text style={styles.termsText}>
-            Al continuar, aceptas los <Text style={styles.termsLink}>Términos de uso</Text> y{" "}
-            <Text style={styles.termsLink}>Política de privacidad</Text>.
+            Al continuar, aceptas los{' '}
+            <Text style={styles.termsLink} onPress={() => navigation.navigate('Policy')}>
+              Términos de uso
+            </Text>{' '}
+            y{' '}
+            <Text style={styles.termsLink} onPress={() => navigation.navigate('Policy')}>
+              Política de privacidad
+            </Text>.
           </Text>
         </View>
 

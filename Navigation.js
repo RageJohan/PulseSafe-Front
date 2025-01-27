@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import WelcomeScreen from './screens/WelcomeScreenView';
 import LoginScreen from './screens/LoginScreenView';
 import RegisterScreen from './screens/RegisterScreenView';
+import PolicyScreenView from './screens/PolicyScreenView';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function Navigation() {
                 <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Policy" component={PolicyScreenView} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
     );
