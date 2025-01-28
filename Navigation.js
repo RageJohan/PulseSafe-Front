@@ -9,6 +9,11 @@ import MainScreenView from './screens/MainScreenView';
 import PressureScreenView from './screens/PressureScreenView';
 import ProfileScreenView from './screens/ProfileScreenView';
 import NotificationScreenView from './screens/NotificationScreenView';
+import PersonalScreenView from './screens/PersonalScreenView';
+import SettingScreenView from './screens/SettingScreenView';
+import HelpScreenView from './screens/HelpScreenView';
+import ChangePasswordScreenView from './screens/ChangePasswordScreenView';
+import DeleteAccountScreenView from './screens/DeleteAccountScreenView';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +29,11 @@ export default function Navigation() {
                 <Stack.Screen name="Pressure" component={PressureScreenView} options={{ headerShown: false }} />
                 <Stack.Screen name="Profile" component={ProfileScreenView} options={{ headerShown: false }} />
                 <Stack.Screen name="Notification" component={NotificationScreenView} options={{ headerShown: false }} />
+                <Stack.Screen name="Personal" component={PersonalScreenView} options={{ headerShown: false }} />
+                <Stack.Screen name="Setting" component={SettingScreenView} options={{ headerShown: false }} />  
+                <Stack.Screen name="Help" component={HelpScreenView} options={{ headerShown: false }} />
+                <Stack.Screen name="ChangePassword" component={ChangePasswordScreenView} options={{ headerShown: false }} /> 
+                <Stack.Screen name="DeleteAccount" component={DeleteAccountScreenView} options={{ headerShown: false }} />           
             </Stack.Navigator>
         </NavigationContainer>
     );
