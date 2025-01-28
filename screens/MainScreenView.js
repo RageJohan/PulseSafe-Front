@@ -63,16 +63,16 @@ export default function MainScreen() {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Home size={24} color="#FF4E4E" />
+          <Home size={24} color="#FF4E4E" onPress= {() => navigation.navigate("Main")}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Heart size={24} color="#FF4E4E" />
+          <Heart size={24} color="#FF4E4E" onPress={() => navigation.navigate("Pressure")}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <User size={24} color="#FF4E4E" />
+          <User size={24} color="#FF4E4E" onPress={() => navigation.navigate("Profile")} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Bell size={24} color="#FF4E4E" />
+          <Bell size={24} color="#FF4E4E" onPress={() => navigation.navigate("Notification")} />
         </TouchableOpacity>
       </View>
     </View>
