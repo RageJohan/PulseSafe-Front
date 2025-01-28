@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Icon from "../assets/icon6.png"; // Importa el logo
-import { Home, Heart, User, Bell } from "lucide-react-native"
+import Icon from "../assets/icon6.png";
+import { Home, Heart, User, Bell } from "lucide-react-native";
 
 export default function PressureScreen() {
   const navigation = useNavigation();
@@ -10,31 +10,65 @@ export default function PressureScreen() {
     <View style={styles.container}>
       {/* Logo Section */}
       <View style={styles.logoContainer}>
-        <View style={styles.logoWrapper}>
-          {/* Logo y texto como en el Código 1 */}
-          <Image source={Icon} style={styles.image} />
-          <Text style={styles.textPulse}>Tu salud, al alcance de tu mano.</Text>
+        <Image source={Icon} style={styles.image} />
+        
+        {/* Título principal */}
+        <Text style={styles.mainTitle}>Presión Arterial</Text>
+        
+        {/* Texto descriptivo */}
+        <View style={styles.titleWrapper}>
+          <Text style={styles.textPulse}>Tu Salud, Al Alcance</Text>
+          <Text style={styles.textPulse}>De Tu Mano.</Text>
         </View>
 
-        {/* Description */}
+        {/* Subtítulo */}
         <Text style={styles.description}>
-            Conecta tu smartwatch para comenzar a medir.
+          Conecta tu smartwatch para comenzar a medir.
         </Text>
+
+        {/* Sección de métricas */}
+        <View style={styles.metricsContainer}>
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Presión Sistólica</Text>
+            <Text style={styles.metricValue}>120 mmHg</Text>
+          </View>
+          
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Presión Diastólica</Text>
+            <Text style={styles.metricValue}>80 mmHg</Text>
+          </View>
+          
+          <View style={styles.metricItem}>
+            <Text style={styles.metricLabel}>Frecuencia Cardiaca</Text>
+            <Text style={styles.metricValue}>75 BPM</Text>
+          </View>
+        </View>
       </View>
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-            <Home size={24} color="#FF4E4E" onPress= {() => navigation.navigate("Main")}/>
+        <TouchableOpacity 
+          style={styles.navItem} 
+          onPress={() => navigation.navigate("Main")}>
+          <Home size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-            <Heart size={24} color="#FF4E4E" onPress={() => navigation.navigate("Pressure")}/>
+        
+        <TouchableOpacity 
+          style={styles.navItem} 
+          onPress={() => navigation.navigate("Pressure")}>
+          <Heart size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-            <User size={24} color="#FF4E4E" onPress={() => navigation.navigate("Profile")}/>
+        
+        <TouchableOpacity 
+          style={styles.navItem} 
+          onPress={() => navigation.navigate("Profile")}>
+          <User size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-            <Bell size={24} color="#FF4E4E" onPress={() => navigation.navigate("Notifications")}/>
+        
+        <TouchableOpacity 
+          style={styles.navItem} 
+          onPress={() => navigation.navigate("Notifications")}>
+          <Bell size={24} color="#FF4E4E" />
         </TouchableOpacity>
       </View>
     </View>
@@ -45,53 +79,71 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
   },
   logoContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  logoWrapper: {
-    alignItems: "center", // Centra el logo y el texto
+    marginBottom: -10,
   },
   image: {
-    width: 200,
-    height: 200,
-    resizeMode: "cover",
+    width: 150,
+    height: 150,
+    resizeMode: "contain",
+    marginBottom: 20,
   },
-  textPulse: {
-    fontSize: 32,
+  mainTitle: {
+    fontSize: 28,
     fontWeight: "bold",
     color: "#FF4E4E",
-    paddingLeft: 10, // Ajusta el padding para alinear el texto
+    marginBottom: 5,
+  },
+  titleWrapper: {
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  textPulse: {
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "center",
   },
   description: {
-    marginTop: 20,
+    fontSize: 16,
+    color: "#666",
     textAlign: "center",
-    color: "#000000",
-    fontSize: 15,
-    lineHeight: 20,
+    marginBottom: 10,
     paddingHorizontal: 20,
+  },
+  metricsContainer: {
+    width: "100%",
+    gap: 10,
+  },
+  metricItem: {
+    alignItems: "center",
+    backgroundColor: "#FFF0F0",
+    borderRadius: 15,
+    padding: 20,
+  },
+  metricLabel: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 8,
+  },
+  metricValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FF4E4E",
   },
   bottomNav: {
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 16,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 5,
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#EEE",
   },
   navItem: {
-    padding: 8,
+    padding: 10,
   },
 });
