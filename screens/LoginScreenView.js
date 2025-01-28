@@ -1,14 +1,49 @@
 // screens/LoginScreenView.js
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+
+const API_URL = "http://10.0.2.2:8080/api/usuarios/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  /**
+   * Llamada al endpoint de login
+   */
+  const handleLogin = async () => {
+    // Validación
+    if (!email || !password) {
+      Alert.alert("Error", "Todos los campos son obligatorios.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }), // <-- usamos email y password
+      });
+
+      if (!response.ok) {
+        // Manejo de errores (por ejemplo, si es 401 o 500)
+        throw new Error("Error al iniciar sesión. Código: " + response.status);
+      }
+
+      const data = await response.json();
+      Alert.alert("Login exitoso", `Bienvenido, ${data.nombre}!`);
+
+    // PASAMOS "nombre" como parámetro a Main
+    navigation.navigate("Main", { userName: data.nombre });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+      console.error("Error al logear:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -63,7 +98,7 @@ export default function LoginScreen() {
         {/* Botón de Iniciar Sesión */}
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => navigation.navigate("Main")} // Navega a MainScreenView
+          onPress={handleLogin} // <-- Llamamos a handleLogin
         >
           <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
         </TouchableOpacity>
@@ -78,6 +113,7 @@ export default function LoginScreen() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

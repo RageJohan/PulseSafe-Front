@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { Settings, Home, Heart, User, Bell, ChevronDown } from "lucide-react-native"
 
 export default function MainScreen() {
   const navigation = useNavigation()
+  // Para obtener los parámetros pasados por el navigate
+  const route = useRoute()
+  const { userName } = route.params || {}  // Si no viene nada, será undefined
 
   const specialties = [
     { id: 1, name: "Cardiology", icon: Heart },
@@ -19,10 +22,14 @@ export default function MainScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.userInfo}>
-          <Image source={{ uri: "/placeholder.svg?height=40&width=40" }} style={styles.avatar} />
+          <Image
+            source={{ uri: "/placeholder.svg?height=40&width=40" }}
+            style={styles.avatar}
+          />
           <View style={styles.welcomeText}>
             <Text style={styles.greeting}>Hola, Bienvenido</Text>
-            <Text style={styles.userName}>John Doe</Text>
+            {/* Aquí usamos el userName obtenido de route.params */}
+            <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.settingsButton}>
@@ -63,10 +70,10 @@ export default function MainScreen() {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Home size={24} color="#FF4E4E" onPress= {() => navigation.navigate("Main")}/>
+          <Home size={24} color="#FF4E4E" onPress={() => navigation.navigate("Main")} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Heart size={24} color="#FF4E4E" onPress={() => navigation.navigate("Pressure")}/>
+          <Heart size={24} color="#FF4E4E" onPress={() => navigation.navigate("Pressure")} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <User size={24} color="#FF4E4E" onPress={() => navigation.navigate("Profile")} />
