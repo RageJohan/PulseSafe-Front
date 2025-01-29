@@ -1,32 +1,74 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { ChevronLeft, Eye, EyeOff } from "lucide-react-native"
-import { useState } from "react"
+// screens/ChangePasswordScreen.js
+
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react-native";
+import { useAuth } from "../context/AuthContext"; // Importar el hook useAuth
 
 export default function ChangePasswordScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const { user } = useAuth(); // Obtener el usuario desde el contexto
+
   const [passwords, setPasswords] = useState({
     current: "",
     new: "",
     confirm: "",
-  })
+  });
+
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
     confirm: false,
-  })
+  });
 
   const togglePasswordVisibility = (field) => {
     setShowPasswords((prev) => ({
       ...prev,
       [field]: !prev[field],
-    }))
-  }
+    }));
+  };
 
-  const handleSaveChanges = () => {
-    // Handle password change logic here
-    console.log("Saving password changes")
-  }
+  const handleSaveChanges = async () => {
+    const { current, new: newPassword, confirm } = passwords;
+
+    // Validaciones básicas
+    if (!current || !newPassword || !confirm) {
+      Alert.alert("Error", "Todos los campos son obligatorios.");
+      return;
+    }
+
+    if (newPassword !== confirm) {
+      Alert.alert("Error", "La nueva contraseña y la confirmación no coinciden.");
+      return;
+    }
+
+    try {
+      // Realizar la solicitud al backend para actualizar la contraseña
+      const response = await fetch(`http://10.0.2.2:8080/api/usuarios/${user.idUsuario}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // Agrega encabezados de autenticación si los tienes (por ejemplo, token JWT)
+        },
+        body: JSON.stringify({
+          password: newPassword, // Solo enviamos la nueva contraseña
+        }),
+      });
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Contraseña actualizada exitosamente.");
+        // Opcional: Navegar de regreso o limpiar los campos
+        navigation.goBack();
+      } else {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.mensaje || "Error al cambiar la contraseña.");
+      }
+    } catch (error) {
+      console.error("Error al cambiar la contraseña:", error);
+      Alert.alert("Error", "Ocurrió un error al cambiar la contraseña. Inténtalo de nuevo.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -42,6 +84,7 @@ export default function ChangePasswordScreen() {
 
       {/* Password Fields */}
       <View style={styles.formContainer}>
+        {/* Contraseña Actual */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Contraseña Actual</Text>
           <View style={styles.passwordContainer}>
@@ -59,6 +102,7 @@ export default function ChangePasswordScreen() {
           </View>
         </View>
 
+        {/* Nueva Contraseña */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nueva Contraseña</Text>
           <View style={styles.passwordContainer}>
@@ -76,6 +120,7 @@ export default function ChangePasswordScreen() {
           </View>
         </View>
 
+        {/* Confirmar Nueva Contraseña */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Confirmar Contraseña</Text>
           <View style={styles.passwordContainer}>
@@ -93,12 +138,13 @@ export default function ChangePasswordScreen() {
           </View>
         </View>
 
+        {/* Botón para Guardar Cambios */}
         <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
           <Text style={styles.saveButtonText}>Guardar Cambios</Text>
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -169,5 +215,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-})
-
+});

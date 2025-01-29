@@ -1,5 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+// screens/ProfileScreenView.js
+
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {
   Home,
   Heart,
@@ -12,18 +15,47 @@ import {
   Settings,
   HelpCircle,
   LogOut,
-} from "lucide-react-native"
+} from "lucide-react-native";
+
+// Importa el hook useAuth desde AuthContext
+import { useAuth } from "../context/AuthContext"; // Asegúrate de que la ruta sea correcta
 
 export default function ProfileScreenView() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
+  // Obtener el usuario y la función para actualizarlo desde el contexto
+  const { user, setUser } = useAuth();
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    Alert.alert(
+      "Cerrar Sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Sí",
+          onPress: () => {
+            setUser(null); // Limpiar el usuario del contexto
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Welcome" }], // Asegúrate de tener una pantalla "Welcome"
+            });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  // Actualizar el ítem de menú para "Cerrar Sesión" para usar la función handleLogout
   const menuItems = [
     { title: "Perfil", icon: User, screen: "Personal", bgColor: "#FFE6E6" },
     { title: "Politica De Privacidad", icon: Lock, screen: "Policy", bgColor: "#FFE6E6" },
     { title: "Ajustes", icon: Settings, screen: "Setting", bgColor: "#FFE6E6" },
     { title: "Ayuda", icon: HelpCircle, screen: "Help", bgColor: "#FFE6E6" },
-    { title: "Cerrar Sesión", icon: LogOut, screen: "Welcome", bgColor: "#FFE6E6" },
-  ]
+    { title: "Cerrar Sesión", icon: LogOut, action: handleLogout, bgColor: "#FFE6E6" },
+  ];
 
   return (
     <View style={styles.container}>
@@ -45,13 +77,24 @@ export default function ProfileScreenView() {
             <Phone size={16} color="#FF4E4E" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.profileName}>John Doe</Text>
+        {/* Mostrar el nombre del usuario desde el contexto */}
+        <Text style={styles.profileName}>{user?.nombre || "Nombre por Defecto"}</Text>
       </View>
 
       {/* Menu Options */}
       <View style={styles.menuContainer}>
         {menuItems.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.menuItem} onPress={() => navigation.navigate(item.screen)}>
+          <TouchableOpacity
+            key={index}
+            style={styles.menuItem}
+            onPress={() => {
+              if (item.action) {
+                item.action(); // Ejecutar la acción si existe (por ejemplo, cerrar sesión)
+              } else {
+                navigation.navigate(item.screen); // Navegar a la pantalla correspondiente
+              }
+            }}
+          >
             <View style={styles.menuItemLeft}>
               <View style={[styles.iconContainer, { backgroundColor: item.bgColor }]}>
                 <item.icon size={20} color="#FF4E4E" />
@@ -79,7 +122,7 @@ export default function ProfileScreenView() {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -147,6 +190,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEEEEE",
   },
   menuItemLeft: {
     flexDirection: "row",
@@ -185,4 +230,4 @@ const styles = StyleSheet.create({
   navItem: {
     padding: 8,
   },
-})
+});

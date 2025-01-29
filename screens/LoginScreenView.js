@@ -1,9 +1,9 @@
-// screens/LoginScreenView.js
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { ChevronLeft } from "lucide-react-native"
+import { useAuth } from "../context/AuthContext";
+  // Ajusta la ruta según tu estructura
 
 const API_URL = "http://10.0.2.2:8080/api/usuarios/login";
 
@@ -13,50 +13,51 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  /**
-   * Llamada al endpoint de login
-   */
+  // Consumimos el contexto
+  const { setUser } = useAuth();
+
   const handleLogin = async () => {
-    // Validación
     if (!email || !password) {
       Alert.alert("Error", "Todos los campos son obligatorios.");
       return;
     }
-
     try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }), // <-- usamos email y password
+        body: JSON.stringify({ email, password }),
       });
-
       if (!response.ok) {
-        // Manejo de errores (por ejemplo, si es 401 o 500)
         throw new Error("Error al iniciar sesión. Código: " + response.status);
       }
 
       const data = await response.json();
       Alert.alert("Login exitoso", `Bienvenido, ${data.nombre}!`);
 
-    // PASAMOS "nombre" como parámetro a Main
-    navigation.navigate("Main", { userName: data.nombre });
+      // Guardamos el usuario en el contexto. 
+      // (data debería contener { idUsuario, nombre, email, etc. })
+      setUser({
+        idUsuario: data.idUsuario,
+        nombre: data.nombre,
+        email: data.email,
+        // etc...
+      });
+
+      // Navegamos a Main (ya no pasamos userName por params)
+      navigation.navigate("Main");
     } catch (error) {
       Alert.alert("Error", error.message);
       console.error("Error al logear:", error);
     }
   };
-
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <View style={styles.backButtonCircle}>
-            <ChevronLeft size={24} color="#FF4E4E" />
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Iniciar Sesión</Text>
-      </View>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={24} color="#FF4E4E" />
+      </TouchableOpacity>
+
+      <Text style={styles.headerText}>Iniciar Sesión</Text>
 
       {/* Welcome Section */}
       <View style={styles.welcomeSection}>
@@ -125,28 +126,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 50,
-    
-    marginBottom: 30,
-  },
   backButton: {
-    marginRight: 15,
+    marginTop: 50,
+    marginBottom: 20,
   },
-  backButtonCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FFE6E6",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerTitle: {
+  headerText: {
     fontSize: 24,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: "#FF4E4E",
+    marginBottom: 20,
   },
   welcomeSection: {
     marginBottom: 30,

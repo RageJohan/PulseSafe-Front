@@ -1,12 +1,17 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native"
-import { useNavigation, useRoute } from "@react-navigation/native"
-import { Settings, Home, Heart, User, Bell, ChevronDown } from "lucide-react-native"
+// screens/MainScreen.js
+
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Settings, Home, Heart, User, Bell, ChevronDown } from "lucide-react-native";
+
+// Importa el hook useAuth desde AuthContext
+import { useAuth } from "../context/AuthContext"; // Asegúrate de que la ruta sea correcta
 
 export default function MainScreen() {
-  const navigation = useNavigation()
-  // Para obtener los parámetros pasados por el navigate
-  const route = useRoute()
-  const { userName } = route.params || {}  // Si no viene nada, será undefined
+  const navigation = useNavigation();
+  
+  // Obtén el usuario del contexto
+  const { user } = useAuth();
 
   const specialties = [
     { id: 1, name: "Cardiology", icon: Heart },
@@ -15,7 +20,7 @@ export default function MainScreen() {
     { id: 4, name: "Gynecology", icon: Heart },
     { id: 5, name: "Odontology", icon: Heart },
     { id: 6, name: "Oncology", icon: Heart },
-  ]
+  ];
 
   return (
     <View style={styles.container}>
@@ -23,16 +28,16 @@ export default function MainScreen() {
       <View style={styles.header}>
         <View style={styles.userInfo}>
           <Image
-            source={{ uri: "/placeholder.svg?height=40&width=40" }}
+            source={{ uri: "https://i.pravatar.cc/150" }} // URL de ejemplo
             style={styles.avatar}
           />
           <View style={styles.welcomeText}>
             <Text style={styles.greeting}>Hola, Bienvenido</Text>
-            {/* Aquí usamos el userName obtenido de route.params */}
-            <Text style={styles.userName}>{userName}</Text>
+            {/* Mostrar el nombre del usuario desde el contexto */}
+            <Text style={styles.userName}>{user?.nombre || "Invitado"}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate("Setting")}>
+        <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate("Personal")}>
           <Settings size={24} color="#FF4E4E" />
         </TouchableOpacity>
       </View>
@@ -69,21 +74,21 @@ export default function MainScreen() {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Home size={24} color="#FF4E4E" onPress={() => navigation.navigate("Main")} />
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Main")}>
+          <Home size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Heart size={24} color="#FF4E4E" onPress={() => navigation.navigate("Pressure")} />
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Pressure")}>
+          <Heart size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <User size={24} color="#FF4E4E" onPress={() => navigation.navigate("Profile")} />
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Profile")}>
+          <User size={24} color="#FF4E4E" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Bell size={24} color="#FF4E4E" onPress={() => navigation.navigate("Notification")} />
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Notification")}>
+          <Bell size={24} color="#FF4E4E" style={styles.activeIcon} />
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -198,5 +203,7 @@ const styles = StyleSheet.create({
   navItem: {
     padding: 8,
   },
-})
-
+  activeIcon: {
+    opacity: 1,
+  },
+});

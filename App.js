@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import SplashScreen from './screens/SplashScreenView';
 import Navigation from './Navigation';
+import AuthProvider from './context/AuthContext';
+
 
 export default function App() {
-    const [isShowSplash, setIsShowSplash] = useState(true);
+  const [isShowSplash, setIsShowSplash] = useState(true);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setIsShowSplash(false);
-        }, 2000); // Muestra el splash screen durante 2 segundos
-    }, []);
+  useEffect(() => {
+    // Muestra el splash screen durante 2 segundos
+    const timer = setTimeout(() => {
+      setIsShowSplash(false);
+    }, 2000);
 
-    if (isShowSplash) {
-        return <SplashScreen />;
-    }
+    return () => clearTimeout(timer);
+  }, []);
 
-    return <Navigation />;
+  if (isShowSplash) {
+    return <SplashScreen />;
+  }
+
+  // Envuelve toda la navegación dentro del AuthProvider
+  return (
+    <AuthProvider>
+      <Navigation />
+    </AuthProvider>
+  );
 }

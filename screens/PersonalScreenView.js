@@ -1,16 +1,115 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { ChevronLeft, Phone } from "lucide-react-native"
-import { useState } from "react" // Importa useState
+// screens/PersonalScreen.js
+
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Alert,
+  ScrollView,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { ChevronLeft, Phone } from "lucide-react-native";
+
+// Importa el hook useAuth desde AuthContext
+import { useAuth } from "../context/AuthContext"; // Asegúrate de que la ruta sea correcta
 
 export default function PersonalScreen() {
-  const navigation = useNavigation()
-  const [name, setName] = useState("John Doe")
-  const [emergencyNumber, setEmergencyNumber] = useState("106")
-  const [email, setEmail] = useState("johndoe@gmail.com")
+  const navigation = useNavigation();
+
+  // Obtén el usuario y el token desde el contexto
+  const { user, token, setUser } = useAuth();
+
+  // Estado para los campos editables
+  const [perfil, setPerfil] = useState({
+    nombre: user?.nombre || "",
+    email: user?.email || "",
+    telefonoEmergencia: user?.telefonoEmergencia || "",
+  });
+
+  // Función para manejar cambios en los campos de texto
+  const handleChange = (field, value) => {
+    setPerfil({
+      ...perfil,
+      [field]: value,
+    });
+  };
+
+  // Función para enviar la actualización al backend
+  const handleActualizarPerfil = async () => {
+    // Validaciones básicas
+    if (!perfil.nombre.trim() || !perfil.email.trim() || !perfil.telefonoEmergencia.trim()) {
+      Alert.alert("Error", "Todos los campos son obligatorios.");
+      return;
+    }
+
+    // Validación de formato de correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(perfil.email)) {
+      Alert.alert("Error", "Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+
+    // Validación del número de emergencia (solo números y longitud mínima)
+    const phoneRegex = /^[0-9]{3,}$/;
+    if (!phoneRegex.test(perfil.telefonoEmergencia)) {
+      Alert.alert("Error", "Por favor, ingresa un número de emergencia válido.");
+      return;
+    }
+
+    try {
+      // Realizar la solicitud al backend para actualizar el perfil
+      const response = await fetch(`http://10.0.2.2:8080/api/usuarios/${user.idUsuario}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Agrega el token si es necesario
+        },
+        body: JSON.stringify({
+          nombre: perfil.nombre,
+          email: perfil.email,
+          telefonoEmergencia: perfil.telefonoEmergencia,
+          // password: perfil.password, // No incluimos password aquí
+        }),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        Alert.alert("Éxito", "Perfil actualizado exitosamente.");
+
+        // Actualizar el contexto con los nuevos datos del usuario
+        setUser({
+          ...user,
+          nombre: updatedUser.nombre,
+          email: updatedUser.email,
+          telefonoEmergencia: updatedUser.telefonoEmergencia,
+        });
+
+        // Opcional: Navegar de regreso o realizar otra acción
+      } else {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.mensaje || "Error al actualizar el perfil.");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el perfil:", error);
+      Alert.alert("Error", "Ocurrió un error al actualizar el perfil. Inténtalo de nuevo.");
+    }
+  };
+
+  // Actualizar el estado local cuando el usuario en el contexto cambie
+  useEffect(() => {
+    setPerfil({
+      nombre: user?.nombre || "",
+      email: user?.email || "",
+      telefonoEmergencia: user?.telefonoEmergencia || "",
+    });
+  }, [user]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -24,8 +123,11 @@ export default function PersonalScreen() {
       {/* Profile Image */}
       <View style={styles.profileSection}>
         <View style={styles.profileImageContainer}>
-          <Image source={{ uri: "https://i.pravatar.cc/150" }} style={styles.profileImage} />
-          <TouchableOpacity style={styles.phoneButton}>
+          <Image
+            source={{ uri: "https://i.pravatar.cc/150" }}
+            style={styles.profileImage}
+          />
+          <TouchableOpacity style={styles.phoneButton} onPress={() => Alert.alert("Llamar", "Funcionalidad no implementada.")}>
             <Phone size={16} color="#FF4E4E" />
           </TouchableOpacity>
         </View>
@@ -33,65 +135,58 @@ export default function PersonalScreen() {
 
       {/* Form Fields */}
       <View style={styles.formContainer}>
+        {/* Nombres */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nombres</Text>
-          <View style={styles.inputField}>
-            <TextInput
-              style={styles.inputText}
-              value={name}
-              onChangeText={setName}
-              placeholder="Ingresa tu nombre"
-            />
-          </View>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Nombres"
+            placeholderTextColor="#999999"
+            value={perfil.nombre}
+            onChangeText={(text) => handleChange("nombre", text)}
+          />
         </View>
 
+        {/* Número De Emergencia */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Número De Emergencia</Text>
-          <View style={styles.inputField}>
-            <TextInput
-              style={styles.inputText}
-              value={emergencyNumber}
-              onChangeText={setEmergencyNumber}
-              placeholder="Ingresa número de emergencia"
-              keyboardType="phone-pad"
-            />
-          </View>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Número De Emergencia"
+            placeholderTextColor="#999999"
+            value={perfil.telefonoEmergencia}
+            onChangeText={(text) => handleChange("telefonoEmergencia", text)}
+            keyboardType="phone-pad"
+          />
         </View>
 
+        {/* Correo */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Correo</Text>
-          <View style={styles.inputField}>
-            <TextInput
-              style={styles.inputText}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Ingresa tu correo"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Correo Electrónico"
+            placeholderTextColor="#999999"
+            value={perfil.email}
+            onChangeText={(text) => handleChange("email", text)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
         </View>
 
-        <TouchableOpacity style={styles.updateButton}>
+        {/* Botón para Actualizar Perfil */}
+        <TouchableOpacity style={styles.updateButton} onPress={handleActualizarPerfil}>
           <Text style={styles.updateButtonText}>Actualizar Perfil</Text>
         </TouchableOpacity>
       </View>
-    </View>
-  )
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-  },
-  placeholderText: {
-    color: '#999999',
-  },
-  inputText: {
-    fontSize: 16,
-    color: "#666666",
-    width: '100%', // Asegura que el TextInput ocupe todo el espacio
   },
   header: {
     flexDirection: "row",
@@ -141,6 +236,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   inputGroup: {
     marginBottom: 20,
@@ -155,10 +251,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F7FF",
     borderRadius: 10,
     padding: 15,
-  },
-  inputText: {
     fontSize: 16,
-    color: "#666666",
+    color: "#000000",
   },
   updateButton: {
     backgroundColor: "#FF4E4E",
@@ -172,4 +266,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-})
+});
