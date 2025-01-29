@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native"
+import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { ChevronLeft, Phone } from "lucide-react-native"
+import { useState } from "react" // Importa useState
 
 export default function PersonalScreen() {
   const navigation = useNavigation()
+  const [name, setName] = useState("John Doe")
+  const [emergencyNumber, setEmergencyNumber] = useState("106")
+  const [email, setEmail] = useState("johndoe@gmail.com")
 
   return (
     <View style={styles.container}>
@@ -32,21 +36,39 @@ export default function PersonalScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nombres</Text>
           <View style={styles.inputField}>
-            <Text style={styles.inputText}>John Doe</Text>
+            <TextInput
+              style={styles.inputText}
+              value={name}
+              onChangeText={setName}
+              placeholder="Ingresa tu nombre"
+            />
           </View>
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Número De Emergencia</Text>
           <View style={styles.inputField}>
-            <Text style={styles.inputText}>106</Text>
+            <TextInput
+              style={styles.inputText}
+              value={emergencyNumber}
+              onChangeText={setEmergencyNumber}
+              placeholder="Ingresa número de emergencia"
+              keyboardType="phone-pad"
+            />
           </View>
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Correo</Text>
           <View style={styles.inputField}>
-            <Text style={styles.inputText}>johndoe@gmail.com</Text>
+            <TextInput
+              style={styles.inputText}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Ingresa tu correo"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
           </View>
         </View>
 
@@ -62,6 +84,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+  },
+  placeholderText: {
+    color: '#999999',
+  },
+  inputText: {
+    fontSize: 16,
+    color: "#666666",
+    width: '100%', // Asegura que el TextInput ocupe todo el espacio
   },
   header: {
     flexDirection: "row",
