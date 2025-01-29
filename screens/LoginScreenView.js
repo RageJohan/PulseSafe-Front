@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { ChevronLeft } from "lucide-react-native"
 
 const API_URL = "http://10.0.2.2:8080/api/usuarios/login";
 
@@ -48,11 +49,14 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={24} color="#FF4E4E" />
-      </TouchableOpacity>
-
-      <Text style={styles.headerText}>Iniciar Sesión</Text>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <View style={styles.backButtonCircle}>
+            <ChevronLeft size={24} color="#FF4E4E" />
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Iniciar Sesión</Text>
+      </View>
 
       {/* Welcome Section */}
       <View style={styles.welcomeSection}>
@@ -121,15 +125,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
   },
-  backButton: {
-    marginTop: 50,
-    marginBottom: 20,
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 50,
+    
+    marginBottom: 30,
   },
-  headerText: {
+  backButton: {
+    marginRight: 15,
+  },
+  backButtonCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FFE6E6",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "600",
     color: "#FF4E4E",
-    marginBottom: 20,
   },
   welcomeSection: {
     marginBottom: 30,

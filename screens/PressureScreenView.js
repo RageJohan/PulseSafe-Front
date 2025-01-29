@@ -67,7 +67,7 @@ export default function PressureScreen() {
         
         <TouchableOpacity 
           style={styles.navItem} 
-          onPress={() => navigation.navigate("Notifications")}>
+          onPress={() => navigation.navigate("Notification")}>
           <Bell size={24} color="#FF4E4E" />
         </TouchableOpacity>
       </View>
