@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
 
 
-const API_URL = "http://192.168.0.111:8080/api/usuarios"
+const API_URL = "http://10.0.2.2:8080/api/usuarios"
 
 export default function RegisterScreen() {
   const navigation = useNavigation()
