@@ -32,7 +32,7 @@ export default function MainScreen() {
             <Text style={styles.userName}>{userName}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.settingsButton}>
+        <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate("Setting")}>
           <Settings size={24} color="#FF4E4E" />
         </TouchableOpacity>
       </View>
