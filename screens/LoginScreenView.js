@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { ChevronLeft } from "lucide-react-native"
 
-const API_URL = "http://192.168.0.111:8080/api/usuarios/login";
+const API_URL = "http://10.0.2.2:8080/api/usuarios/login";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
