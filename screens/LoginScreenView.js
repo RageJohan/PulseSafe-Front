@@ -28,7 +28,7 @@ export default function LoginScreen() {
         body: JSON.stringify({ email, password }),
       });
       if (!response.ok) {
-        throw new Error("Error al iniciar sesión. Código: " + response.status);
+        throw new Error("Correo o contraseña incorrecto ");
       }
 
       const data = await response.json();
