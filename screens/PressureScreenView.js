@@ -47,27 +47,16 @@ export default function PressureScreen() {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate("Main")}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Main")}>
           <Home size={24} color="#FF4E4E" />
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate("Pressure")}>
+        </TouchableOpacity>        
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Pressure")}>
           <Heart size={24} color="#FF4E4E" />
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate("Profile")}>
+        </TouchableOpacity>        
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Profile")}>
           <User size={24} color="#FF4E4E" />
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.navItem} 
-          onPress={() => navigation.navigate("Notification")}>
+        </TouchableOpacity>        
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Notification")}>
           <Bell size={24} color="#FF4E4E" />
         </TouchableOpacity>
       </View>
@@ -137,24 +126,29 @@ const styles = StyleSheet.create({
     color: "#FF4E4E",
   },
   bottomNav: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     paddingVertical: 16,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 5,
   },
   navItem: {
-    padding: 10,
+    padding: 8,
+    backgroundColor: "#FFF0F0",
+    borderRadius: 12,
   },
 });

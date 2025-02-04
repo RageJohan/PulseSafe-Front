@@ -257,6 +257,10 @@ const styles = StyleSheet.create({
     color: "#999999",
   },
   bottomNav: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
@@ -265,15 +269,17 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 5,
   },
   navItem: {
     padding: 8,
-  },
-  activeIcon: {
-    opacity: 1,
+    backgroundColor: "#FFF0F0",
+    borderRadius: 12,
   },
 });
